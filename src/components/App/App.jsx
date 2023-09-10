@@ -6,16 +6,17 @@ import { Filter } from '../Filter/Fillter';
 import { Container } from './App.styled';
 
 export const App = () => {
-  const [contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState(getItems());
   const [filter, setFilter] = useState('');
 
-  useEffect(() => {
+  function getItems() {
     const savedContacts = localStorage.getItem('contacts');
     if (savedContacts !== null) {
       const items = JSON.parse(savedContacts);
-      setContacts(items);
+      return items;
     }
-  }, []);
+    return [];
+  }
 
   useEffect(() => {
     localStorage.setItem('contacts', JSON.stringify(contacts));
@@ -35,11 +36,11 @@ export const App = () => {
       alert(`${data.name} is already in contacts`);
       return;
     }
-    setContacts([...contacts, newContact]);
+    setContacts(prev => [...prev, newContact]);
   };
 
   const handleDelete = id => {
-    setContacts(contacts.filter(contact => contact.id !== id));
+    setContacts(prev => prev.filter(contact => contact.id !== id));
   };
 
   const visibleItems = contacts.filter(contact =>
